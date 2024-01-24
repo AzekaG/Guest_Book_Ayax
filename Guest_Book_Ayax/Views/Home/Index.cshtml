@@ -1,0 +1,304 @@
+﻿@model Guest_Book_Ayax.Models.Users
+@section Scripts{
+	<script>
+		$(document).ready(function () {
+
+			CreateHeader();
+			CreateMessageArea();
+
+			function CreateHeader() {
+				$.ajax({
+					url: '@Url.Action("IsLoggedIn", "Users")',
+					type: 'GET',
+					contentType: false,
+					processData: false,
+					success: function (response) {
+						LoggedHeader();
+						
+					},
+					error: function (x, y, z) {
+						Unloggedheader();
+						
+					}
+				});
+				}
+
+
+			function LoggedHeader() {
+				let rows = "<a asp-action='Index' class='btnHome' data-dialog-title='На главную'> Главная </a>" +
+					"<a asp-action='Login' class='logOutDialog' data-dialog-title='Выход'> Выход</a>"+
+				    "<a asp-action='EnterMessage' class='feedbackDialog' data-dialog-title='Ваш отзыв : '> Написать отзыв</a>";
+				$("#header_Container").html(rows);
+
+
+
+
+				$(".btnHome").on("click", function (e) {
+					e.preventDefault();
+					CreateHeader();
+					
+				});
+
+				$(".logOutDialog").on("click", function (e) {
+					e.preventDefault();
+					$.ajax({
+						url: "@Url.Action("Logout", "Home")",
+						type: "POST",
+						data: $('form').serialize(),
+						datatype: "json",
+						success: function (result) {
+							CreateHeader();
+
+						},
+						error: function (x, y, z) {
+							CreateHeader();
+						}
+					});
+				});
+
+				$(".feedbackDialog").on("click", function (e) {
+					e.preventDefault();
+					/*START */
+
+					$("<div></div>")
+						.addClass("dialog")
+						.appendTo("body")
+						.dialog({
+							contentType: false,
+							processData: false,
+							title: $(this).attr("data-dialog-title"),
+							close: function () { $(this).remove() },
+							modal: true,
+							buttons: {
+								"Отправить отзыв": function () {
+									$.ajax({
+										url: "@Url.Action("EnterMessage", "Users")",
+										type: "POST",
+										data: $('form').serialize(),
+										datatype: "json",
+										success: function (result) {
+											
+											$(".dialog").remove();
+											CreateMessageArea();
+											swal("Благодарим за Ваш отзыв", "он отправлен успешно", "success");
+										},
+										error: function (x, y, z) {
+											
+											
+											swal("Это все что Вы хотели сказать ?О_о ", "", "error");
+										}
+									});
+								}
+
+							}
+
+						})
+						.load("https://localhost:7161/Users/EnterMessage");
+					/*FINISH */
+
+
+
+				});
+
+
+
+
+
+
+
+
+
+				/*EndLoggedHeader*/
+		}
+
+
+
+
+			function Unloggedheader() {
+				let rows =/*ok*/ "<a asp-action='Index' asp-controller='Users' class='btnHome' data-dialog-title='На главную'> Главная </a>" +
+						/*ok*/	"<a asp-action='Login' asp-controller='Users' class='loginDialog' data-dialog-title='Вход'> Вход</a>" +
+					"<a asp-action='Registration' asp-controller='Users' class='registrationDialog' data-dialog-title='Регистрация'> Регистрация </a>";
+				$("#header_Container").html(rows);
+				//
+				$(".loginDialog").on("click", function (e) {
+					e.preventDefault();
+
+					$("<div></div>")
+						.addClass("dialog")
+						.appendTo("body")
+						.dialog({
+							contentType: false,
+							processData: false,
+							title: $(this).attr("data-dialog-title"),
+							close: function () { $(this).remove() },
+							modal: true,
+							buttons: {
+								"Войти": function () {
+									$.ajax({
+										url: "@Url.Action("Login", "Users")",
+										type: "POST",
+										data: $('form').serialize(),
+										datatype: "json",
+										success: function (result) {
+											
+											$(".dialog").remove();
+											
+											swal(result ,"вход выполнен успешно","success");
+											CreateHeader();
+											
+										},
+										error: function () {//не удается вызвать error
+											
+											
+											swal("","Неверный логин или пароль", "error");
+											CreateHeader();
+										}
+									});
+								}
+
+							}
+
+						})
+						.load("https://localhost:7161/Users/Login");
+
+
+				});
+
+				$(".btnHome").on("click", function (e) {
+						e.preventDefault();
+						CreateHeader();
+					}
+					
+					
+					);
+
+				$(".registrationDialog").on("click", function (e) {
+					e.preventDefault();
+					$("<div></div>")
+						.addClass("dialog")
+						.appendTo("body")
+						.dialog({
+							contentType: false,
+							processData: false,
+							title: $(this).attr("data-dialog-title"),
+							close: function () { $(this).remove() },
+							modal: true,
+							buttons:
+							{
+								"Зарегистирироваться": function () {
+									$.ajax({
+										url: "@Url.Action("Registration", "Users")",
+										type: "POST",
+										data: $('form').serialize(),
+										datatype: "json",
+										success: function (result) {
+											$(".ui-dialog").remove();
+											CreateHeader();
+											swal("Регистрация прошла успешно!", "", "success");
+
+										},
+										error: function (x, y, z) {
+											swal("Что-то пошло не так", "проверьте свои данные", "question");
+											
+										}
+									});
+								}
+
+							}
+
+						})
+						.load("https://localhost:7161/Users/Registration");
+
+				});
+
+
+			/*UnloggedHeaderEnd*/}
+
+			
+
+
+				
+			
+
+				
+
+			function LoggingDialog() {
+			
+				}
+
+
+			
+			function CreateMessageArea() {
+				$.ajax({
+					url: '@Url.Action("GetMessages", "Users")',
+					type: 'GET',
+					contentType: false,
+					processData: false,
+					success: function (response) {
+
+						GetMessages(response);
+						
+					},
+					error: function (x, y, z) {
+						alert(x + '\n' + y + '\n' + z);
+					}
+
+
+				})
+			}
+
+			function GetMessages(response) {
+				
+				let messages = JSON.parse(response);
+				let rows = "";
+				$.each(messages, function (index, message) {
+					rows += rowMsg(message);
+				});
+
+				 $("#Message_Area").html("<h1>" + rows + "</h1>");
+			}
+
+			let rowMsg = function (message) {
+				return ("<div class= 'quote'><p><span>" + message.Msg + "</span></p></div>" +
+					"<div class='persona'>"+
+					"<div class='photo' > <img class='img-circle img-thumbnail' src = 'https://bootstraptema.ru/snippets/icons/2016/mia/2.png' alt = ''/></div>" +
+					"<p>" + message.UserFirstName + " " + message.UserLastName + "</p>"+
+					"<p>" + message.Date + "</p></div>");
+
+
+
+
+
+
+
+			}
+
+
+
+
+
+
+		})
+
+
+	</script>
+}
+
+
+
+<div class="row" id="header_ContainerMain">
+    <form>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand disabled"> <img src="~/img/pngwing.com (2).png" /></a>
+			<div class=" navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav myHeader" id="header_Container">
+					
+				</div>
+			</div>
+		</nav>
+		<div id="Message_Area" class="messageBox">
+
+
+		</div>
+    </form>
+</div>

@@ -1,0 +1,137 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.MainHeader ul {
+    display: flex;
+    padding-left: 50px;
+}
+
+    .MainHeader ul li {
+        list-style-type: none;
+        text-decoration: none;
+        padding;
+    }
+
+        .MainHeader ul li a {
+            list-style-type: none;
+            text-decoration: none;
+        }
+
+
+.navbar-nav li {
+    padding-right: 20px;
+}
+
+.nav-link {
+    font-size: 1.1em !important
+}
+
+
+
+#messageBox {
+    overflow-y: scroll;
+}
+
+
+
+
+
+#comments-slider {
+    margin: 20px auto;
+    width: 100%;
+    padding: 1em;
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+.quote {
+    background: antiquewhite;
+    padding: 15px 20px 5px 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+    .quote:after {
+        content: '';
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 20px 18px 0 18px;
+        border-color: antiquewhite transparent transparent transparent;
+        position: relative;
+        top: 37px;
+        left: 20px;
+    }
+
+.persona {
+    margin-left: 25px;
+    margin-bottom: 80px;
+}
+
+    .persona .photo {
+        background-color: #ccc;
+        border-radius: 100px;
+        width: 60px;
+        height: 60px;
+        float: left;
+        margin-right: 10px;
+    }
+
+    .persona p {
+        position: relative;
+        top: 5px;
+        text-transform: uppercase;
+    }
+
+
+
+
+
+
+
+
+.myHeader a {
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 15px 25px;
+    padding: 15px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-transition: 0.4s ease-in-out;
+    -o-transition: 0.4s ease-in-out;
+    transition: 0.4s ease-in-out;
+    border-radius: 10px;
+    color: #40382D;
+    box-shadow: inset 0 -5px 0 #40382D;
+}
+   
+.myHeader a:hover{
+       box-shadow: inset 0 -60px 0 #40382D, 2px 2px 3px rgba(0, 0, 0, 0.3);
+   color: #DECDA5;
+}
+
+
